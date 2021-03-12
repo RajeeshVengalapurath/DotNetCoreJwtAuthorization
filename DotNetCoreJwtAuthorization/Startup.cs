@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DotNetCoreJwtAuthorization
@@ -15,7 +17,19 @@ namespace DotNetCoreJwtAuthorization
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication("OAuth")
-                .AddJwtBearer();
+                .AddJwtBearer("OAuth", config =>
+                {
+                    var secretPhraseBytes = Encoding.UTF8.GetBytes(MyConstants.SecretPhrase);
+                    var key = new SymmetricSecurityKey(secretPhraseBytes);
+
+                    config.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        IssuerSigningKey = key,
+                        ValidIssuer = MyConstants.Issuer,
+                        ValidAudience = MyConstants.Audiance
+                    };
+                });
+
             services.AddControllersWithViews();
         }
 
