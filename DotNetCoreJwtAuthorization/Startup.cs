@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -21,6 +22,18 @@ namespace DotNetCoreJwtAuthorization
                 {
                     var secretPhraseBytes = Encoding.UTF8.GetBytes(MyConstants.SecretPhrase);
                     var key = new SymmetricSecurityKey(secretPhraseBytes);
+
+                    //This will help to pass token as a url query parameter
+                    //https://localhost:44304/Home/Secret?my_access_token=eyJhbGciOiJIUzI.....KWbjTVnVbIzYqE
+                    config.Events = new JwtBearerEvents()
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            if (context.Request.Query.ContainsKey("my_access_token"))
+                                context.Token = context.Request.Query["my_access_token"];
+                            return Task.CompletedTask;
+                        }
+                    };
 
                     //To verify, Get token, access secret action method using postman with header key as Authorization and value as Bearer<space>token base 64 value
                     config.TokenValidationParameters = new TokenValidationParameters()
