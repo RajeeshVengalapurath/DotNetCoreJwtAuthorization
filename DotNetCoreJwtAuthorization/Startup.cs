@@ -14,6 +14,8 @@ namespace DotNetCoreJwtAuthorization
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication("OAuth")
+                .AddJwtBearer();
             services.AddControllersWithViews();
         }
 
