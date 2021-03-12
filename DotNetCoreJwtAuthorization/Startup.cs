@@ -22,7 +22,7 @@ namespace DotNetCoreJwtAuthorization
                     var secretPhraseBytes = Encoding.UTF8.GetBytes(MyConstants.SecretPhrase);
                     var key = new SymmetricSecurityKey(secretPhraseBytes);
 
-                    //Get token, access secret action method using postman with header key as Authorization and value as Bearer<space>token base 64 value
+                    //To verify, Get token, access secret action method using postman with header key as Authorization and value as Bearer<space>token base 64 value
                     config.TokenValidationParameters = new TokenValidationParameters()
                     {
                         IssuerSigningKey = key,
